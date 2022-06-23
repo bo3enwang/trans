@@ -152,33 +152,35 @@ const Header: React.FC<HeaderProps> = ({}) => {
           })}
         </div>
       </div>
-      <div className="flex items-center flex-shrink-0 w-full px-10 shadow-b bg-gray-100 bg-opacity-75 border-t ">
-        <div className="text-indigo-700 mr-3 font-bold flex items-center gap-3">
-          <div>Transform To</div>
-          <ShuffleIcon className="w-5 h-5 fill-indigo-600" />
+      {Object.keys(toMap).length > 0 && (
+        <div className="flex items-center flex-shrink-0 w-full px-10 shadow-b bg-gray-100 bg-opacity-75 border-t ">
+          <div className="text-indigo-700 mr-3 font-bold flex items-center gap-3">
+            <div>Transform To</div>
+            <ShuffleIcon className="w-5 h-5 fill-indigo-600" />
+          </div>
+          {Object.keys(toMap).map((key) => {
+            const to = toMap[key];
+            return (
+              <Link href={`/${currentFrom}-to-${key}`} key={key}>
+                <a
+                  key={key}
+                  className={clsx(
+                    "flex items-center gap-2 text-sm font-semibold  cursor-pointer p-2 ml-3",
+                    {
+                      "text-white-700 bg-indigo-500/80 text-white":
+                        isCurFrom && key == currentTo,
+                      "bg-gray-100/50 hover:bg-indigo-500": key != currentTo,
+                    }
+                  )}
+                >
+                  <span>{to.icon}</span>
+                  <span>{to.name}</span>
+                </a>
+              </Link>
+            );
+          })}
         </div>
-        {Object.keys(toMap).map((key) => {
-          const to = toMap[key];
-          return (
-            <Link href={`/${currentFrom}-to-${key}`} key={key}>
-              <a
-                key={key}
-                className={clsx(
-                  "flex items-center gap-2 text-sm font-semibold  cursor-pointer p-2 ml-3",
-                  {
-                    "text-white-700 bg-indigo-500/80 text-white":
-                      isCurFrom && key == currentTo,
-                    "bg-gray-100/50 hover:bg-indigo-500": key != currentTo,
-                  }
-                )}
-              >
-                <span>{to.icon}</span>
-                <span>{to.name}</span>
-              </a>
-            </Link>
-          );
-        })}
-      </div>
+      )}
     </header>
   );
 };

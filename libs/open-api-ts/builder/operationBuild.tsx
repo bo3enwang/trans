@@ -24,15 +24,34 @@ const operationBuild = (operation: Operation) => {
 
   const body = bodyTemplate ? "{{indent}}{{indent}}data" : "";
 
-  return `
-  const{{space}}${operation.name}{{space}}={{space}}(${params}){{space}}=>{{space}}{
-  {{indent}}return{{space}}request({
-    {{indent}}{{indent}}method{{space}}:{{space}}"${operation.method}",
-    {{indent}}{{indent}}url{{space}}:{{space}}\`${path}\`,
-    ${body}
-    {{indent}}});
+  const code: string[] = [];
+
+  code.push(
+    `const{{space}}${operation.name}{{space}}={{space}}(${params}){{space}}=>{{space}}{`
+  );
+  code.push(`{{indent}}return{{space}}request({`);
+  code.push(
+    `{{indent}}{{indent}}method{{space}}:{{space}}"${operation.method}",`
+  );
+  code.push(`{{indent}}{{indent}}url{{space}}:{{space}}\`${path}\`,`);
+  if (body) {
+    code.push(body);
   }
-  `
+  if (queryTemplate && queryTemplate.length) {
+    const parmas = queryTemplate.map((q) => {
+      const param = q.replaceAll(" ", "").split(":");
+      if (param && param.length) {
+        return `...${param[0]}`;
+      }
+      return "";
+    });
+    code.push(`{{indent}}{{indent}}params{{space}}:{{space}}{${parmas}}`);
+  }
+  code.push("{{indent}}})");
+  code.push("}\n");
+
+  return code
+    .join("\n")
     .replaceAll(" ", "")
     .replaceAll("{{indent}}", "  ")
     .replaceAll("{{space}}", " ");

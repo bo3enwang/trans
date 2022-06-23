@@ -11,9 +11,6 @@ export type Options = {
 
 export const generate = async ({ input }: Options) => {
   const openApi = isString(input) ? await getOpenApiSpec(input) : input;
-
-  console.log(openApi);
-
   const openApiVersion = getOpenApiVersion(openApi);
   switch (openApiVersion) {
     case OpenApiVersion.V2: {
