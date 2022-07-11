@@ -61,8 +61,8 @@ const OpenApiToTs: React.FC<OpenApiToTsProps> = ({}) => {
   const [fetchOpen, setFetchOpen] = useState<boolean>(false);
   const [settingOpen, setSettingOpen] = useState<boolean>(false);
 
-  const g = async () => {
-    if (code) {
+  const genCode = async (from: string) => {
+    if (from) {
       const tsClinet = await generate({ input: JSON.parse(code) });
       setClient(tsClinet);
     }
@@ -74,7 +74,6 @@ const OpenApiToTs: React.FC<OpenApiToTsProps> = ({}) => {
       fr.onload = function () {
         if (isString(fr.result)) {
           setCode(fr.result!);
-          g();
         }
       };
       fr.readAsText(acceptedFiles[0]);
@@ -117,6 +116,12 @@ const OpenApiToTs: React.FC<OpenApiToTsProps> = ({}) => {
       }, 100);
     });
   }, [codeEditorRef]);
+
+  useEffect(() => {
+    if (code) {
+      genCode(code);
+    }
+  }, [code]);
 
   return (
     <Layout>
