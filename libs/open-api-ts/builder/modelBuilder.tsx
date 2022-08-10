@@ -2,7 +2,7 @@ import { Model } from "../client/interfaces/Model";
 
 const modelBuilder = (model: Model) => {
   return `
-  type{{space}}${model.name}{{space}}{
+  type{{space}}${model.name}{{space}} = {
     ${model.properties
       .map((p, i) => {
         let str = `${p.name}?:{{space}}${p.type};`;
